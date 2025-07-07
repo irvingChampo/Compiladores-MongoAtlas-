@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"mongoapi/config" // Importar el paquete config para acceder al cliente MongoDB
+	"mongoapi/config"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -56,7 +57,6 @@ func AnalizarHandler(w http.ResponseWriter, r *http.Request) {
 func analizarLexico(comando string) []Token {
 	var tokens []Token
 
-	// Mejorar la expresión regular para capturar mejor ObjectId
 	re := regexp.MustCompile(`ObjectId\("[a-fA-F0-9]{24}"\)|[\w\.]+|\(|\)|\{|\}|\[|\]|,|:|"[^"]*"|\$\w+`)
 	matches := re.FindAllString(comando, -1)
 
@@ -121,12 +121,12 @@ func analizarSintaxis(comando string) []string {
 func analizarSemantica(comando string) []string {
 	var errores []string
 
-	// Obtener el cliente MongoDB y la base de datos
-	db := config.Client.Database("BaseChampo")
+	// Obtener la base de datos BaseChampo
+	db := config.MongoClient.Database("BaseChampo")
 
 	// Extraer el nombre de la colección (si aplica)
-	parts := strings.Split(comando, ".")
-	if len(parts) < 3 {
+	parts := strings.SplitN(comando, ".", 3)
+	if len(parts) < 2 {
 		if !strings.Contains(comando, "createCollection") && !strings.Contains(comando, "getCollectionNames") && !strings.Contains(comando, "dropDatabase") {
 			errores = append(errores, "Se esperaba una colección en el comando")
 			return errores
@@ -134,7 +134,7 @@ func analizarSemantica(comando string) []string {
 	}
 	coleccion := ""
 	if len(parts) >= 2 {
-		coleccion = strings.Split(parts[1], "(")[0]
+		coleccion = strings.TrimSpace(strings.SplitN(parts[1], "(", 2)[0])
 	}
 
 	// Verificar existencia de la colección para comandos que lo requieren
