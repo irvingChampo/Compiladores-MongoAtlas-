@@ -48,9 +48,12 @@ const Home = () => {
     Array(acciones.length).fill(true).map((v, i) => i === 0 ? false : true)
   );
 
+  // Usar variable de entorno para la URL del backend
+  const API_URL = import.meta.env.VITE_API_URL || 'https://mongo-api-60hj.onrender.com';
+
   const manejarAnalisis = async (index, comando) => {
     try {
-      const res = await fetch("https://mongo-api-60hj.onrender.com/api/analizar", {
+      const res = await fetch(`${API_URL}/api/analizar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ comando }),
@@ -81,7 +84,7 @@ const Home = () => {
           setBloqueados(nuevos);
         }
 
-        const exec = await fetch("https://mongo-api-60hj.onrender.com/api/ejecutar", {
+        const exec = await fetch(`${API_URL}/api/ejecutar`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ comando }),
