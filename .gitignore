@@ -1,0 +1,8 @@
+cat > .gitignore << EOL
+# .gitignore
+Back/main
+Back/main.zip
+Front/node_modules
+Front/build
+.env
+EOL

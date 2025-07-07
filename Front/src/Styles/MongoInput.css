@@ -1,0 +1,43 @@
+.input-box {
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.input-box label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-box small {
+  color: #555;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.input-box textarea {
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border-radius: 4px;
+  resize: none;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.input-box button {
+  padding: 8px 16px;
+  background-color: #0078d4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.input-box button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

@@ -1,0 +1,380 @@
+/* Estilos base y fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de partículas de fondo */
+.main-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px, 60px 60px, 40px 40px;
+  animation: float 20s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Header moderno */
+.header {
+  background: linear-gradient(135deg, #6bfff8 0%, rgb(0, 123, 255) 50%, #6bfff8 100%);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(45deg, #fff, #13fb07, #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+  to { text-shadow: 0 0 30px rgba(23, 224, 20, 0.8); }
+}
+
+/* Contenedor principal */
+.contenedor {
+  display: flex;
+  flex: 1;
+  padding: 30px;
+  gap: 30px;
+  height: calc(100vh - 90px);
+  position: relative;
+  z-index: 1;
+}
+
+/* Lado izquierdo con gradiente y efectos */
+.lado-izquierdo {
+  width: 55%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 30px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.lado-izquierdo:hover {
+  transform: translateY(-5px);
+}
+
+.lado-izquierdo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b6b, #ffa500, #ff1493, #9c27b0);
+  border-radius: 20px 20px 0 0;
+}
+
+/* Lado derecho con diseño futurista */
+.lado-derecho {
+  width: 45%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 30px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    0 10px 20px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.lado-derecho:hover {
+  transform: translateY(-5px);
+}
+
+.lado-derecho::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #00bcd4, #4caf50, #ffeb3b, #0080fff9);
+  border-radius: 20px 20px 0 0;
+}
+
+/* Barras de desplazamiento personalizadas */
+.lado-izquierdo::-webkit-scrollbar,
+.lado-derecho::-webkit-scrollbar {
+  width: 10px;
+}
+
+.lado-izquierdo::-webkit-scrollbar-track,
+.lado-derecho::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.lado-izquierdo::-webkit-scrollbar-thumb,
+.lado-derecho::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #ff6b6b, #ffa500);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.lado-izquierdo::-webkit-scrollbar-thumb:hover,
+.lado-derecho::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #ff1493, #ff6b6b);
+}
+
+/* Secciones de análisis con estilo moderno */
+.seccion-analisis {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.seccion-analisis:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.seccion-analisis::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b6b, #ffa500, #ff1493);
+  border-radius: 15px 15px 0 0;
+}
+
+.seccion-analisis h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding-bottom: 10px;
+  border-bottom: 2px solid transparent;
+  background: linear-gradient(90deg, #ff6b6b, #ffa500, #ff1493);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.seccion-analisis h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b6b, #ffa500, #ff1493);
+  border-radius: 2px;
+}
+
+/* Tabla léxica con estilo vibrante */
+.lexico-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.lexico-table th,
+.lexico-table td {
+  padding: 15px;
+  text-align: left;
+  border: none;
+}
+
+.lexico-table th {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.lexico-table tr:nth-child(even) {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 165, 0, 0.1) 100%);
+}
+
+.lexico-table tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.lexico-table tr:hover {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.2) 0%, rgba(255, 165, 0, 0.2) 100%);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+/* Mensajes de error y éxito con colores vibrantes */
+.sintaxis-error {
+  color: #fff;
+  margin: 10px 0;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+  border-left: 4px solid #ff5722;
+  font-weight: 500;
+  animation: slideIn 0.5s ease;
+}
+
+.semantica-error {
+  color: #fff;
+  margin: 10px 0;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+  border-left: 4px solid #e91e63;
+  font-weight: 500;
+  animation: slideIn 0.5s ease;
+}
+
+.no-error {
+  color: #fff;
+  margin: 10px 0;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+  border-left: 4px solid #8bc34a;
+  font-weight: 500;
+  animation: slideIn 0.5s ease;
+}
+
+.no-data {
+  color: #666;
+  margin: 10px 0;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, rgba(158, 158, 158, 0.1) 0%, rgba(189, 189, 189, 0.1) 100%);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #bdbdbd;
+  font-weight: 500;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Efectos de hover mejorados */
+.seccion-analisis:hover .lexico-table th {
+  background: linear-gradient(135deg, #ff5722 0%, #ff9800 100%);
+  transition: all 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .contenedor {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .lado-izquierdo,
+  .lado-derecho {
+    width: 100%;
+    max-height: 50vh;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Animaciones adicionales */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.seccion-analisis:hover h3 {
+  animation: pulse 1s infinite;
+}
