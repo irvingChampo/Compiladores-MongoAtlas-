@@ -1,29 +1,36 @@
 package main
 
 import (
-	"log"
-	"mongoapi/config"
-	"mongoapi/routes"
-	"os"
-	"net/http"
-
-	"github.com/gorilla/handlers"
+    "log"
+    "mongoapi/config"
+    "mongoapi/routes"
+    "net/http"
+    "os"
+    "github.com/gorilla/handlers"
+    "github.com/gorilla/mux"
 )
 
 func main() {
-	config.ConnectMongo()
+    router := mux.NewRouter()
 
-	router := routes.SetupRoutes()
+    // Configuración de CORS
+    originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173", "https://mongo-front.onrender.com"})
+    headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+    methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
 
-	// Configurar CORS
-	headersOk := handlers.AllowedHeaders([]string{"Content-Type"})
-	originsOk := handlers.AllowedOrigins([]string{"http://localhost:5173"})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"})
+    // Configuración de rutas
+    routes.SetRoutes(router)
 
-	log.Println("Servidor iniciado en :8080")
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" // Puerto por defecto para pruebas locales
-	}
-	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
+    // Conexión a MongoDB
+    config.ConnectDB()
+
+    // Configuración del puerto
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080" // Puerto por defecto para pruebas locales
+    }
+
+    // Iniciar el servidor
+    log.Printf("Servidor iniciado en el puerto %s", port)
+    log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }

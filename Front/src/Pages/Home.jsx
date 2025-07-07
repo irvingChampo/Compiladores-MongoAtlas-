@@ -50,7 +50,7 @@ const Home = () => {
 
   const manejarAnalisis = async (index, comando) => {
     try {
-      const res = await fetch("http://localhost:8080/api/analizar", {
+      const res = await fetch("https://mongo-api-60hj.onrender.com/api/analizar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ comando }),
@@ -81,7 +81,7 @@ const Home = () => {
           setBloqueados(nuevos);
         }
 
-        const exec = await fetch("http://localhost:8080/api/ejecutar", {
+        const exec = await fetch("https://mongo-api-60hj.onrender.com/api/ejecutar", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ comando }),
