@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"regexp"
 	"strings"
+	"mongoapi/config" // Importar el paquete config para acceder al cliente MongoDB
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type AnálisisResultado struct {
@@ -118,28 +121,47 @@ func analizarSintaxis(comando string) []string {
 func analizarSemantica(comando string) []string {
 	var errores []string
 
-	// Validaciones semánticas mejoradas
+	// Obtener el cliente MongoDB y la base de datos
+	db := config.Client.Database("BaseChampo")
+
+	// Extraer el nombre de la colección (si aplica)
+	parts := strings.Split(comando, ".")
+	if len(parts) < 3 {
+		if !strings.Contains(comando, "createCollection") && !strings.Contains(comando, "getCollectionNames") && !strings.Contains(comando, "dropDatabase") {
+			errores = append(errores, "Se esperaba una colección en el comando")
+			return errores
+		}
+	}
+	coleccion := ""
+	if len(parts) >= 2 {
+		coleccion = strings.Split(parts[1], "(")[0]
+	}
+
+	// Verificar existencia de la colección para comandos que lo requieren
+	if strings.Contains(comando, "insertOne") || strings.Contains(comando, "findOne") || 
+	   strings.Contains(comando, "updateOne") || strings.Contains(comando, "deleteOne") || 
+	   strings.Contains(comando, "drop") {
+		if coleccion != "" && !coleccionExiste(db, coleccion) {
+			errores = append(errores, "La colección '"+coleccion+"' no existe")
+		}
+	}
+
+	// Validaciones semánticas existentes
 	if strings.Contains(comando, "findOne") {
-		// Para findOne, verificar que tenga un filtro válido con ObjectId
 		if strings.Contains(comando, "_id:") && !strings.Contains(comando, "ObjectId(") {
 			errores = append(errores, "Para buscar por _id se requiere ObjectId")
 		}
-		// Validar formato de ObjectId si está presente
-		if strings.Contains(comando, "ObjectId(") {
-			if !validarFormatoObjectId(comando) {
-				errores = append(errores, "Formato de ObjectId inválido (debe tener 24 caracteres hexadecimales)")
-			}
+		if strings.Contains(comando, "ObjectId(") && !validarFormatoObjectId(comando) {
+			errores = append(errores, "Formato de ObjectId inválido (debe tener 24 caracteres hexadecimales)")
 		}
 	}
 
 	if strings.Contains(comando, "updateOne") {
-		// Para updateOne, verificar que tenga filtro y documento de actualización
 		if strings.Contains(comando, "_id:") && !strings.Contains(comando, "ObjectId(") {
 			errores = append(errores, "Para actualizar por _id se requiere ObjectId")
 		}
 		if !strings.Contains(comando, "$set") && !strings.Contains(comando, "$unset") && 
 		   !strings.Contains(comando, "$inc") && !strings.Contains(comando, "$push") {
-			// Solo advertir si no parece ser un documento de reemplazo completo
 			if strings.Count(comando, "{") < 2 {
 				errores = append(errores, "updateOne requiere un documento de actualización (ej: {$set: {...}})")
 			}
@@ -150,7 +172,6 @@ func analizarSemantica(comando string) []string {
 	}
 
 	if strings.Contains(comando, "deleteOne") {
-		// Para deleteOne, verificar que tenga un filtro válido
 		if strings.Contains(comando, "_id:") && !strings.Contains(comando, "ObjectId(") {
 			errores = append(errores, "Para eliminar por _id se requiere ObjectId")
 		}
@@ -160,7 +181,6 @@ func analizarSemantica(comando string) []string {
 	}
 
 	if strings.Contains(comando, "insertOne") {
-		// Validar que insertOne tenga un documento para insertar
 		if !strings.Contains(comando, "{") || !strings.Contains(comando, "}") {
 			errores = append(errores, "insertOne requiere un documento para insertar")
 		}
@@ -169,8 +189,20 @@ func analizarSemantica(comando string) []string {
 	return errores
 }
 
+func coleccionExiste(db *mongo.Database, coleccion string) bool {
+	colecciones, err := db.ListCollectionNames(context.Background(), bson.M{})
+	if err != nil {
+		return false
+	}
+	for _, c := range colecciones {
+		if c == coleccion {
+			return true
+		}
+	}
+	return false
+}
+
 func validarFormatoObjectId(comando string) bool {
-	// Validar que el ObjectId tenga el formato correcto
 	re := regexp.MustCompile(`ObjectId\("([a-fA-F0-9]{24})"\)`)
 	matches := re.FindStringSubmatch(comando)
 	return len(matches) > 1 && len(matches[1]) == 24
